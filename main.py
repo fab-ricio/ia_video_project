@@ -28,6 +28,25 @@ pipe = StableDiffusionPipeline.from_pretrained(
 frames_per_scene = 6  # moins d'images par scène pour accélérer
 fps = 8  # images par seconde pour la vidéo
 
+# Choix du mode : 'local' (images fixes) ou 'colab' (vraie vidéo IA)
+mode = 'colab'  # change en 'local' pour générer sur ton PC
+
+if mode == 'colab':
+    print("\n=== Pour générer une vraie vidéo animée IA, copie ce code dans Google Colab : ===\n")
+    print('''\
+!pip install modelscope
+!pip install imageio[ffmpeg]
+from modelscope.pipelines import pipeline
+from modelscope.outputs import OutputKeys
+pipe = pipeline('text-to-video-synthesis', 'damo/text-to-video-synthesis')
+prompt = "un petit garçon en chemise bleu parle à une fille avec chemise rouge, style dessin animé mignon"
+result = pipe({'text': prompt})
+video_path = result[OutputKeys.OUTPUT_VIDEO]
+from IPython.display import Video
+Video(video_path, embed=True)
+''')
+    exit()
+
 # Générer les images animées
 images = []
 for idx, scene in enumerate(scenes):
