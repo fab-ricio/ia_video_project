@@ -6,6 +6,7 @@ from moviepy.editor import ImageSequenceClip
 import os
 from diffusers import StableDiffusionPipeline
 import torch
+import time
 
 # Texte à transformer en images
 texte = """
@@ -49,17 +50,28 @@ Video(video_path, embed=True)
 
 # Générer les images animées
 images = []
+total_frames = len(scenes) * frames_per_scene
+start_time = time.time()
+
 for idx, scene in enumerate(scenes):
     for frame in range(frames_per_scene):
-        # Ajout d'une variation simple pour simuler le mouvement
         prompt = (
             scene +
             f", cute cartoon animation, frame {frame+1}, mouvement, style dessin animé, couleurs vives"
         )
+        frame_start = time.time()
         image = pipe(prompt, height=384, width=384, num_inference_steps=20).images[0]
         path = f"scenes/scene_{idx}_frame_{frame}.png"
         image.save(path)
         images.append(path)
+        # Estimation du temps restant
+        frames_done = idx * frames_per_scene + frame + 1
+        elapsed = time.time() - start_time
+        avg_time = elapsed / frames_done
+        frames_left = total_frames - frames_done
+        eta = int(avg_time * frames_left)
+        mins, secs = divmod(eta, 60)
+        print(f"Image {frames_done}/{total_frames} générée. Temps restant estimé : {mins:02d}:{secs:02d}")
 
 # Assembler les images en vidéo animée
 clip = ImageSequenceClip(images, fps=fps)
