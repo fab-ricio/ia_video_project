@@ -30,10 +30,10 @@ frames_per_scene = 6  # moins d'images par scène pour accélérer
 fps = 8  # images par seconde pour la vidéo
 
 # Choix du mode : 'local' (images fixes) ou 'colab' (vraie vidéo IA)
-mode = 'colab'  # change en 'local' pour générer sur ton PC
+mode = 'modelscope'  # 'local' pour images fixes, 'modelscope' pour vraie vidéo IA
 
-if mode == 'colab':
-    print("\n=== Pour générer une vraie vidéo animée IA, copie ce code dans Google Colab : ===\n")
+if mode == 'modelscope':
+    print("\n=== Pour générer une vraie vidéo animée IA avec ModelScope, copie ce code dans Google Colab : ===\n")
     print('''\
 !pip install modelscope
 !pip install imageio[ffmpeg]
